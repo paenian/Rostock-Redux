@@ -1,4 +1,4 @@
-include <mcad/nuts_and_bolts.scad>
+include <nuts_and_bolts.scad>
 include <configuration.scad>
 
 module nut(d,h,horizontal=true){
