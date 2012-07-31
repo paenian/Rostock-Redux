@@ -26,13 +26,13 @@ module rodMount(motor=true){
 				translate([-.5,-mrodDia/2-wall-wall,0])
 				//rotate([0,0,60])
 				//translate([-2,0,0])
-				hex_nutmount(boltSize,wall-1,mheight, false);
+				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, false);
 
 				//platform mounts wing	
 				translate([0,-mrodDia/2-wall-wall,0])
 				rotate([0,0,-120])
 				translate([wingLength,0,0])
-				hex_nutmount(boltSize,wall,mnutHeight*2, true);
+				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, true);
 				
 				//wing supports
 				translate([0,-mrodDia/2-wall-wall,0])
@@ -76,7 +76,26 @@ module rodMount(motor=true){
 	}
 }
 
-translate([0,0,-.1])
-%cube([200,200,0.2], center=true);
-translate([-rodSeparation/2,30,0])
-rodMount(true);
+//place on hex mount
+module hexPlate(){
+	translate([0,0,-.1])
+	%cylinder(r=200, h=0.2, center=true, $fn=6);
+	for(i=[0:2]){
+		rotate([0,0,120*i])
+		translate([-rodSeparation/2,178,0])
+		rodMount(true);
+	}
+}
+
+//place for printing
+module printPlate(){
+	translate([0,0,-.1])
+	%cube([200,200,0.2], center=true);
+	for(i=[0:2]){
+		translate([-rodSeparation/2,40*i-wall,0])
+		rodMount(true);
+	}
+}
+
+printPlate();
+//hexPlate();

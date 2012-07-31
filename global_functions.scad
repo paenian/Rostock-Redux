@@ -42,7 +42,6 @@ module rod_pressure_mount(size=10, wall=4, height=60, top=true){
 	e = .01;
 	numTabs = round(height/20);
 	tabSep = wall;
-	tabWidth = wall;
 	tabLength = (height-tabSep*2)/numTabs-tabSep;
 
 	gap = tabGap;
@@ -62,7 +61,7 @@ module rod_pressure_mount(size=10, wall=4, height=60, top=true){
 			for(j=[0:1]){
 				rotate([0,0,120*j-60])
 				for(i=[0:numTabs-1]){
-					translate([-tabWidth/2,0,tabSep+(tabLength+tabSep)*i])
+					translate([-tabWidth/2,1,tabSep+(tabLength+tabSep)*i])
 					cube([tabWidth,size,tabLength]);
 				}
 			}
