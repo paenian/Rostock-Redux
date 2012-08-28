@@ -158,14 +158,14 @@ module hex_nutmount(size = 3, wall = 3, height = 20, screw=false){
 
 			//inner bolt hole
 			translate([0,0,-.5])
-			cylinder(r1=boltDia/2, r2=boltDia/2, h=height+1, $fn=12);
+			cylinder(r1=boltDia/2, r2=boltDia/2, h=height+1, $fn=18);
 			
 			if(screw){
 				//tapered screw support
 				translate([0,0,nutThickness])
-				cylinder(r1=boltDia/2, r2=boltDia/2+nutThickness, h=nutThickness+e, $fn=12);
+				cylinder(r1=boltDia/2, r2=boltDia/2+nutThickness, h=nutThickness+e, $fn=18);
 				translate([0,0,nutThickness*2])
-				cylinder(r1=boltDia/2+nutThickness, r2=boltDia/2+nutThickness, h=height+e, $fn=12);
+				cylinder(r1=boltDia/2+nutThickness, r2=boltDia/2+nutThickness, h=height+e, $fn=18);
 
 			}else{
 				//inner nut trap
