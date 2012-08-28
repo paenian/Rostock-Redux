@@ -23,13 +23,13 @@ module rodMount(motor=true){
 				rod_pressure_mount(10, wall, mheight, clamp=boltSize);
 	
 				//platform mounts inner
-				translate([-.5,-mrodDia/2-wall-wall,0])
+				translate([wall/2-1,-mrodDia/2-wall-wall-1,0])
 				//rotate([0,0,60])
 				//translate([-2,0,0])
-				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, false);
+				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, true);
 
 				//platform mounts wing	
-				translate([0,-mrodDia/2-wall-wall,0])
+				translate([wall/2-1,-mrodDia/2-wall-wall,0])
 				rotate([0,0,-120])
 				translate([wingLength,0,0])
 				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, true);
