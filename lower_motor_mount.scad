@@ -5,7 +5,7 @@ use <global_functions.scad>
 //mount is printed upside-down to allow for nice wings.
 
 //local variables
-mrodDia = rodSize;
+mrodDia = rodSize+rodSlop;
 mheight = 50;
 mSlotCenter = (motorMin+motorMax)/2;
 mSlotWidth = COURSE_METRIC_BOLT_MAJOR_THREAD_DIAMETERS[3]+boltSlop;
@@ -20,7 +20,7 @@ module rodMount(motor=true){
 			mirror([1*i,0,0]){
 				//rod clamps
 				//rotate([0,0,30])
-				rod_pressure_mount(10, wall, mheight, clamp=boltSize);
+				rod_pressure_mount(mrodDia, wall, mheight, clamp=boltSize);
 	
 				//platform mounts inner
 				translate([wall/2-1,-mrodDia/2-wall-wall-1,0])
@@ -97,5 +97,7 @@ module printPlate(){
 	}
 }
 
-printPlate();
+//printPlate();
 //hexPlate();
+
+rodMount(true);
