@@ -11,6 +11,7 @@ module lmxuu_mount(dia = lm_dia, height = lm_height){
 	height=lm_height+wall*2;
 	e = 0.01;
 
+	rotate([0,0,90])
 	difference(){
 		union(){
 			//outer cylinder
@@ -52,4 +53,4 @@ module lmxuu_mount(dia = lm_dia, height = lm_height){
 	}
 }
 
-lmxuu_mount(lm_dia, lm_height);
+//lmxuu_mount(lm_dia, lm_height);
