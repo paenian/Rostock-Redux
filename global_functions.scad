@@ -1,4 +1,3 @@
-include <mcad/nuts_and_bolts.scad>
 include <configuration.scad>
 
 module nut(d,h,horizontal=true){
@@ -92,8 +91,8 @@ rod_pressure_mount();
 module rod_bolt_mount(size=10, wall=4, height=20, clamp=0, bottom=false){
 	outer = (size/2 + wall)*2/sqrt(3);
 	e = .01;
-	tabOuter = METRIC_NUT_AC_WIDTHS[clamp]+2;
-	nutThickness = METRIC_NUT_THICKNESS[clamp];
+	tabOuter = nutDia+2;
+	nutThickness = nutRad;
 	numBolts = round(height/15);
 	
 	union(){
@@ -145,10 +144,8 @@ module rod_bolt_mount(size=10, wall=4, height=20, clamp=0, bottom=false){
 
 module hex_nutmount(size = 3, wall = 3, height = 20, screw=false){
 	e = .01;
-	nutRad =  METRIC_NUT_AC_WIDTHS[size]/2+nutSlop;
-	boltDia = COURSE_METRIC_BOLT_MAJOR_THREAD_DIAMETERS[size]+boltSlop;
 	outer = (nutRad + wall)*2/sqrt(3);
-	nutThickness = METRIC_NUT_THICKNESS[size];
+	nutThickness = nutRad;
 
 	union(){
 		//hex hole

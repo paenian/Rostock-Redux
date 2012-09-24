@@ -1,4 +1,3 @@
-include <mcad/nuts_and_bolts.scad>
 include <configuration.scad>
 use <global_functions.scad>
 
@@ -8,10 +7,10 @@ use <global_functions.scad>
 mrodDia = rodSize+rodSlop;
 mheight = 50;
 mSlotCenter = (motorMin+motorMax)/2;
-mSlotWidth = COURSE_METRIC_BOLT_MAJOR_THREAD_DIAMETERS[3]+boltSlop;
+mSlotWidth = 3 +boltSlop;
 mSlotLength = (motorMax - motorMin+mSlotWidth)*sqrt(2);
-mnutHeight = METRIC_NUT_THICKNESS[boltSize]+nutSlop;
-nutRad =  METRIC_NUT_AC_WIDTHS[boltSize]/2+nutSlop;
+mnutHeight = nutRad/2;
+mStiff = 3;
 
 module rodMount(motor=true){
 	union(){
@@ -26,13 +25,13 @@ module rodMount(motor=true){
 				translate([wall/2-1,-mrodDia/2-wall-wall-1,0])
 				//rotate([0,0,60])
 				//translate([-2,0,0])
-				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, true);
+				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, false);
 
 				//platform mounts wing	
 				translate([wall/2-1,-mrodDia/2-wall-wall,0])
 				rotate([0,0,-120])
 				translate([wingLength,0,0])
-				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, true);
+				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, false);
 				
 				//wing supports
 				translate([0,-mrodDia/2-wall-wall,0])
@@ -44,32 +43,74 @@ module rodMount(motor=true){
 					translate([wall,-.5,mheight])
 					rotate([0,atan((mheight-mnutHeight*2)/(wingLength+wall)),0])	
 					cube([wingLength*2,wall+1,mheight]);
+
+					translate([wingLength+wall+mnutHeight,0,mheight])
+					rotate([90,0,0])
+					scale([1,(mheight-wall-mnutHeight)/wingLength,1])
+					cylinder(h=wall*4, r=wingLength,center=true,$fn=63);
 				}
 			}
 		}
 
 		//motor mount plate
 		difference(){
-			translate([0,-mrodDia/2-wall,0])
-			cube([rodSeparation,wall, mheight]);
-		
-			//center hole
-			translate([rodSeparation/2,-wall*2,mheight/2])
-			rotate([90, 0, 0])
-			{
-				//motor shaft hole
-				cylinder(r=motorShaft, h=mheight, center=true);
-				translate([0, sin(45)*motorShaft,0])
-				rotate([0, 0, 45])
-				cube([motorShaft, motorShaft, motorShaft], center=true);
-	
-				//mounting holes
-				for(i=[0:3]){
-					rotate([0,0,90*i]){
-						translate([mSlotCenter, mSlotCenter,0])
-						rotate([0, 0, -45])
-						cube([mSlotWidth, mSlotLength, mheight], center=true);
+			union(){
+				translate([0,-mrodDia/2-wall,0])
+				cube([rodSeparation,wall, mheight]);
+
+				//stiffeners
+				for(i=[0:2]){
+					translate([rodSeparation/2,-mrodDia/2,(mheight/2-mStiff/sqrt(2))*i+mStiff/sqrt(2)])
+					rotate([0,90,0])
+					rotate([0,0,45])
+					cube([mStiff,mStiff,rodSeparation-mrodDia],center=true);
+				}
+
+				//support for the idler bolt
+				if(motor==false){
+					translate([rodSeparation/2,-mrodDia/2,mheight/2])
+					rotate([90, 0, 0])
+					{
+						translate([0,0,wall-.01])
+						difference(){
+							//idler shaft hole
+							cylinder(r1=m8NutDia+2, r2=m8NutRad, h=m8NutRad);
+
+							translate([0,0,.02])
+							cylinder(r=m8NutRad, h=m8NutRad, $fn=6);
+						}
 					}
+				}
+			}
+		
+			if(motor){
+				//center hole
+				translate([rodSeparation/2,-mrodDia/2,mheight/2])
+				rotate([90, 0, 0])
+				{
+					//motor shaft hole
+					cylinder(r=motorShaft, h=mheight, center=true);
+	
+					//mounting holes
+					for(i=[0:3]){
+						rotate([0,0,90*i]){
+							translate([mSlotCenter, mSlotCenter,0])
+							rotate([0, 0, -45])
+							cube([mSlotWidth, mSlotLength, mheight], center=true);
+						}
+					}
+				}
+			}else{
+				//center hole
+				translate([rodSeparation/2,-mrodDia/2,mheight/2])
+				rotate([90, 0, 0])
+				{
+					//idler shaft hole
+					cylinder(r=m8Rad, h=mheight, center=true);
+					
+					//washer area
+					translate([0,0,-wall/2-.005])
+					cylinder(r=motorShaft, h=wall, center=true);
 				}
 			}
 		}
@@ -77,27 +118,30 @@ module rodMount(motor=true){
 }
 
 //place on hex mount
-module hexPlate(){
+module hexPlate(motor=true){
 	translate([0,0,-.1])
 	%cylinder(r=200, h=0.2, center=true, $fn=6);
 	for(i=[0:2]){
 		rotate([0,0,120*i])
 		translate([-rodSeparation/2,178,0])
-		rodMount(true);
+		rodMount(motor);
 	}
 }
 
 //place for printing
-module printPlate(){
+module printPlate(motor=true){
 	translate([0,0,-.1])
 	%cube([200,200,0.2], center=true);
 	for(i=[0:2]){
-		translate([-rodSeparation/2,40*i-wall,0])
-		rodMount(true);
+		rotate([0,0,90])
+		translate([-rodSeparation/2,45*i-wall*2,0])
+		rodMount(motor);
 	}
 }
 
-//printPlate();
+rodMount(true);
+
+//printPlate(false);
 //hexPlate();
 
-rodMount(true);
+//rodMount(true);

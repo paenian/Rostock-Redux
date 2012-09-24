@@ -5,6 +5,9 @@ boltSize = 4;	//3 for m3, 4 for m4
 wingLength = rodSeparation;	//how long the wing supports are for the motor
 				//and idler mounts.
 
+
+idlerShaft = 4.5;
+
 motorShaft = 12.5;
 motorMin = 12.5;
 motorMax = 16.5;
@@ -13,7 +16,16 @@ tabGap = 1;
 tabWidth = 6;
 
 rodSlop	 = 1.0;		//how much bigger to make smooth rod holes
-boltSlop = 0.25;	//how much bigger to make bolt holes
-nutSlop  = 0.25;	//how much bigger to make nut holes
+boltSlop = 0.5;	//how much bigger to make bolt holes
+nutSlop  = 0.6;	//how much bigger to make nut holes
 
-boltDia = COURSE_METRIC_BOLT_MAJOR_THREAD_DIAMETERS[boltSize]+boltSlop;
+
+m8Dia = 8+boltSlop;
+m8Rad = m8Dia/2;
+m8NutDia = 15+nutSlop;
+m8NutRad = m8NutDia/2;
+
+nutDia = 8.1+nutSlop;
+nutRad = nutDia/2;
+boltDia = 4+boltSlop;
+boltRad = boltDia/2;

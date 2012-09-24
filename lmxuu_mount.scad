@@ -1,8 +1,8 @@
 //lm10uu specs
-lm_dia = 16;
-lm_height = 40;
+lm_dia = 20;
+lm_height = 30;
 
-rod_dia = 10;
+rod_dia = 11;
 
 wall = 2;
 
@@ -14,7 +14,7 @@ module lmxuu_mount(dia = lm_dia, height = lm_height){
 	difference(){
 		union(){
 			//outer cylinder
-			cylinder(r1=rad, r2=rad, h=height-wall-e);
+			cylinder(r1=rad, r2=rad, h=height);
 			translate([e,-rad,0])
 			cube([rad, rad*2, height]);
 		}
@@ -23,35 +23,32 @@ module lmxuu_mount(dia = lm_dia, height = lm_height){
 		translate([0,0,wall])
 		cylinder(r=dia/2, h=lm_height);
 
-		//rod slot
-		translate([0,0,-e]){
-			cylinder(r = rod_dia/2, h = height+1);
-			translate([-rad-2, -rod_dia/2, 0])
-			cube([rad+2, rod_dia, height+1]);
+		//leave just a slit top and bottom
+		translate([0,0,-e])
+		intersection(){	
+			cylinder(r=dia/2, h=height+3*e);
+			translate([-rad/2,0,height/2])
+			cube([rad*2, (rad-e)*2, height+3*e],center=true);
 		}
 
-		//the top needs to be cut straight
-		translate([-rad+rod_dia/2-3,-rad-.5,height-wall-e*2])
-		cube([rad+3, rad*2+1, wall+e*3]);
-		
+		//rod hole
+		translate([0,0,-e])
+		cylinder(r = rod_dia/2+.5, h = height+1);		
 
-		//top slot cut out extra
-		translate([-rad-2, -rod_dia/2-wall, height/2])
-		cube([rad+2, rod_dia+wall*2, height+1]);
+		//slot cut out
+		translate([-(rad+2)/2, 0, (height+1)/2])
+		cube([rad+2, rod_dia+wall*2, height+2],center=true);
 	
-		//angle the slot a bit
-		translate([-rad+3.5, (-rad-2)/2-wall, height/2])
+		//angle the slot sides a bit
+		translate([-rad+2, 0, (height+1)/2])
 		rotate([0,0,45])
-		cube([rad+2, rad+2, height+1]);
+		cube([rad+2, rad+2, height+2],center=true);
 		
 
-		//cube slot cutout
+		//cube front cutout
 		translate([-rad,0,height/2])
 		rotate([0,45,0])
 		cube([rad*2+2*e,rad*2+2*e,rad*2+2*e], center=true);
-
-		
-		
 	}
 }
 
