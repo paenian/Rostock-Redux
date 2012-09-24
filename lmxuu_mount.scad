@@ -1,6 +1,4 @@
-//lm10uu specs
-lm_dia = 20;
-lm_height = 30;
+include <configuration.scad>
 
 rod_dia = 11;
 

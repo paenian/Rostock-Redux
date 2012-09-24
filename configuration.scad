@@ -5,6 +5,11 @@ boltSize = 4;	//3 for m3, 4 for m4
 wingLength = rodSeparation;	//how long the wing supports are for the motor
 				//and idler mounts.
 
+//lm10uu specs
+lm_dia = 20;
+lm_height = 30;
+
+tubeDia = 6;
 
 idlerShaft = 4.5;
 

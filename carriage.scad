@@ -39,8 +39,8 @@ module parallel_joints(reinforced = 16) {
       translate([x, 0, 0]) rotate([0, 90, 0]) rotate([0, 0, 30])
         cylinder(r=3.3, h=17, center=true, $fn=6);
     }
-    translate([0, 2, 0]) cylinder(r=middle, h=100, center=true);
-    translate([0, -8, 0]) cube([2*middle, 20, 100], center=true);
+    translate([0, 4, 0]) cylinder(r=middle, h=100, center=true);
+    translate([0, -6, 0]) cube([2*middle, 20, 100], center=true);
   }
 }
 
