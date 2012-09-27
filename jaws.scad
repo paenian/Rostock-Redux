@@ -1,7 +1,16 @@
 include <configuration.scad>
+use <joint.scad>
 
 r=(tubeDia*sqrt(2)+rodSlop)/2;
 h = r*2+2;
+
+translate([0,0,-.1])
+%cube([200,200,0.2], center=true);
+
+//limits - it should fit in this box :-)
+%translate([-r+.75,0,r+1])
+rotate([0,90,0])
+joint();
 
 forkWidth = jointInner+jointSlop;
 forkLength = 35;
