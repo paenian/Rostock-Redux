@@ -1,23 +1,33 @@
-h = 7;
-r = h/2 / cos(30);
+include <configuration.scad>
 
-module stumpy() {
+boltRad = (boltSize+boltSlop)/2;
+
+//limits - it will fit in this box :-)
+//translate([-jointOuter/2,-jointInner/2,0])
+//cube([jointOuter, jointInner, jointHeight]);
+
+module stumpy(rad = 6, length = 5) {
   rotate([0, 90, 0]) rotate([0, 0, 30]) intersection() {
-    cylinder(r=r, h=8, center=true, $fn=6);
-    sphere(r=5.1, $fn=24);
+    cylinder(r=rad, h=length, center=true, $fn=6);
+    union(){
+      for(i=[0:1]){
+        mirror([0,0,i])
+        translate([0,0,length/2-rad])
+        sphere(r=rad+1, $fn=24);
+      }
+    }
   }
 }
 
 module middle() {
   difference() {
     union() {
-      translate([-2, 0, 0]) stumpy();
-      translate([2, 0, 0]) stumpy();
-      rotate([0, 0, 90]) stumpy();
+      stumpy(jointInner/2, jointOuter);
+      rotate([0, 0, 90]) stumpy(jointInner/2, jointInner);
     }
-    rotate([90, 0, 0]) cylinder(r=1.5, h=30, center=true, $fn=12);
-    rotate([0, 90, 0]) cylinder(r=1.5, h=30, center=true, $fn=12);
+    rotate([90, 0, 0]) cylinder(r=boltRad, h=30, center=true, $fn=12);
+    rotate([0, 90, 0]) cylinder(r=boltRad, h=30, center=true, $fn=12);
   }
 }
 
-translate([0, 0, h/2]) middle();
+translate([0, 0, jointHeight/2]) middle();
