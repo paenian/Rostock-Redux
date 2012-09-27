@@ -9,6 +9,8 @@ wingLength = rodSeparation;	//how long the wing supports are for the motor
 rodSlop  = 1.0;	//how much bigger to make smooth rod holes
 boltSlop = 0.5;	//how much bigger to make bolt holes
 nutSlop  = 0.6;	//how much bigger to make nut holes
+jointSlop = .5;	//how much space around the joint
+			//the joint itself isn't slopped, the parts that join to it are.
 
 
 //lm10uu specs
@@ -42,3 +44,8 @@ nutDia = 8.1+nutSlop;
 nutRad = nutDia/2;
 boltDia = 4+boltSlop;
 boltRad = boltDia/2;
+
+m3NutDia = 6.1+nutSlop;
+m3NutRad = m3NutDia/2;
+m3BoltDia = 3+boltSlop;
+m3BoltRad = m3BoltDia/2;
