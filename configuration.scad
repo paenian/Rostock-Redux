@@ -21,9 +21,14 @@ lm_height = 30;
 //joint specs
 tubeDia = 6;
 jointHeight=boltSize*2;
-jointInner=jointHeight / cos(30);
-jointOuter=jointInner+boltSize+boltSlop;
+jointInner=jointHeight / cos(30);  //small side of joint - clamped by the jaw
+jointOuter=jointInner+boltSize+boltSlop;  //large side of joint, clamped by carriage & platform
+jointSeparation=rodSeparation; //separation between rod centers - used to align carriage & platform
 
+
+//platform specs
+platform_thickness = wall*1.15;
+platform_hinge_offset = 20;
 
 //motor/idler specs
 idlerShaft = 4.5;
