@@ -1,10 +1,11 @@
 include <configuration.scad>
 
-boltRad = (boltSize+boltSlop)/2;
+//limits - it should fit in this box :-)
+%translate([-jointOuter/2,-jointInner/2,0])
+cube([jointOuter, jointInner, jointHeight]);
 
-//limits - it will fit in this box :-)
-//translate([-jointOuter/2,-jointInner/2,0])
-//cube([jointOuter, jointInner, jointHeight]);
+translate([0,0,-.1])
+%cube([200,200,0.2], center=true);
 
 module stumpy(rad = 6, length = 5) {
   rotate([0, 90, 0]) rotate([0, 0, 30]) intersection() {
@@ -19,7 +20,8 @@ module stumpy(rad = 6, length = 5) {
   }
 }
 
-module middle() {
+module joint() {
+  translate([0, 0, jointHeight/2])
   difference() {
     union() {
       stumpy(jointInner/2, jointOuter);
@@ -30,4 +32,4 @@ module middle() {
   }
 }
 
-translate([0, 0, jointHeight/2]) middle();
+joint();
