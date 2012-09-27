@@ -1,34 +1,42 @@
 include <configuration.scad>
 
-h = 8;
-//r = h/2 / cos(30);
-r=(tubeDia+rodSlop)/2;
+r=(tubeDia*sqrt(2)+rodSlop)/2;
+h = r*2+2;
+
+forkWidth = jointInner+jointSlop;
+forkLength = 35;
+
+e = 0.01;
 
 module jaws() {
+  translate([0, 0, h/2])
   difference() {
     union() {
       intersection () {
-        rotate([90, 0, 0]) cylinder(r=5, h=14, center=true, $fn=24);
-        translate([-4, 0, 0]) cube([10, 14, h], center=true);
+        rotate([90, 0, 0]) cylinder(r=h/2, h=forkWidth+wall, center=true, $fn=24);
+        translate([-h/2+e, 0, 0]) cube([h, forkWidth+wall, h], center=true);
       }
       intersection() {
-        translate([10, 0, 0]) cube([26, 14, h], center=true);
-        translate([10, 0, 0]) rotate([0, 90, 0]) rotate([0, 0, 0])
-          cylinder(r1=10+2, r2=r+2, h=26, center=true, $fn=4);
+        translate([forkLength/2, 0, 0]) cube([forkLength, forkWidth+wall, h], center=true);
+        translate([forkLength/2, 0, 0]) rotate([0, 90, 0])
+          cylinder(r1=h+2, r2=r+2, h=forkLength, center=true, $fn=4);
       }
     }
-    translate([-1.5, 0, 0]) cube([10, 8.4, 10], center=true);
-    translate([3.5, 0, 0]) rotate([0, 0, 30])
-      cylinder(r=4.2, h=10, center=true, $fn=6);
-    translate([4, 0, 4]) rotate([0, 45, 0])
-      rotate([0, 0, 30]) cylinder(r=4.2, h=8, center=true, $fn=6);
-    translate([4, 0, -4]) rotate([0, -45, 0])
-      rotate([0, 0, 30]) cylinder(r=4.2, h=8, center=true, $fn=6);
-    rotate([90, 0, 0]) cylinder(r=1.55, h=40, center=true, $fn=12);
-    translate([19, 0, 0]) rotate([0, 90, 0])
-      rotate([0,0,0])
-      cylinder(r=r, h=20, center=true, $fn=4);
+    translate([-1.8, 0, 0]) cube([h, forkWidth, h+1], center=true);
+    translate([4, 0, 0]) rotate([0, 0, 30])
+      cylinder(r=forkWidth/2, h=forkLength, center=true, $fn=6);
+    translate([4, 0, 6]) rotate([0, 45, 0])
+      rotate([0, 0, 30]) cylinder(r=forkWidth/2, h=forkLength, center=true, $fn=6);
+    translate([4, 0, -6]) rotate([0, -45, 0])
+      rotate([0, 0, 30]) cylinder(r=forkWidth/2, h=forkLength, center=true, $fn=6);
+    rotate([90, 0, 0]) cylinder(r=boltRad, h=40, center=true, $fn=12);
+    translate([forkLength/2+10, 0, 0]) rotate([0, 90, 0])
+      cylinder(r=r, h=forkLength, center=true, $fn=4);
+
+    //set screw/glue hole
+    translate([forkLength-10,0,0]) rotate([0, 0, 0])
+      cylinder(r=m3BoltRad, h=forkLength, center=true, $fn=32);
   }
 }
 
-translate([0, 0, h/2]) jaws();
+jaws();
