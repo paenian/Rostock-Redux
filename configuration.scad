@@ -5,24 +5,32 @@ boltSize = 4;	//3 for m3, 4 for m4
 wingLength = rodSeparation;	//how long the wing supports are for the motor
 				//and idler mounts.
 
+//generic slop specs
+rodSlop  = 1.0;	//how much bigger to make smooth rod holes
+boltSlop = 0.5;	//how much bigger to make bolt holes
+nutSlop  = 0.6;	//how much bigger to make nut holes
+
+
 //lm10uu specs
 lm_dia = 20;
 lm_height = 30;
 
+
+//joint specs
 tubeDia = 6;
+jointHeight=boltSize*2;
+jointInner=jointHeight / cos(30);
+jointOuter=jointInner+boltSize+boltSlop;
 
+
+//motor/idler specs
 idlerShaft = 4.5;
-
 motorShaft = 12.5;
 motorMin = 12.5;
 motorMax = 16.5;
 
 tabGap = 1;
 tabWidth = 6;
-
-rodSlop	 = 1.0;		//how much bigger to make smooth rod holes
-boltSlop = 0.5;	//how much bigger to make bolt holes
-nutSlop  = 0.6;	//how much bigger to make nut holes
 
 
 m8Dia = 8+boltSlop;
