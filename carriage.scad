@@ -1,55 +1,79 @@
 include <configuration.scad>
-include <lmxuu_mount.scad>
+use <lmxuu_mount.scad>
+use <joint.scad>
 
 translate([0,0,-.1])
 %cube([200,200,0.2], center=true);
 
 
 width = 76;
-height = 24;
+height = jointOuter+jointSlop+nutRad+wall*2;
 
 offset = 25;
 cutout = 13;
 middle = 2*offset - width/2;
 
+////////
+mountWidth = jointOuter+jointSlop+nutRad+wall;
+lmMountSize = lm_dia+4;
+jointOffset = -mountWidth/2-5;
 
-//stock rostock - credit jroscholl - only minor edits
-module parallel_joints(reinforced = 16) {
-  translate([0,0,4])
-  difference() {
-    union() {
-      intersection() {
-        cube([width, 20, 8], center=true);
-        rotate([0, 90, 0]) cylinder(r=5, h=width, center=true);
-      }
-      intersection() {
-        translate([0, 18, 4]) rotate([45, 0, 0])
-          cube([width, reinforced, reinforced], center=true);
-        translate([0, 0, 20]) cube([width, 35, 40], center=true);
-      }
-      translate([0, 8, 0]) cube([width, 16, 8], center=true);
-    }
-    rotate([0, 90, 0]) cylinder(r=1.55, h=80, center=true, $fn=12);
+armHeight = nutRad*2+wall/2;
 
-    for (x = [-offset, offset]) {
-      translate([x, 5.5, 0])
-        cylinder(r=cutout/2, h=100, center=true, $fn=24);
-      translate([x, -4.5, 0])
-        cube([cutout, 20, 100], center=true);
-      translate([x, 0, 0]) rotate([0, 90, 0]) rotate([0, 0, 30])
-        cylinder(r=3.3, h=17, center=true, $fn=6);
+//reworked.
+module parallel_joints(support=0) {
+  for(i=[0:1]){
+    mirror([i,0,0])
+    translate([-jointSeparation/2-mountWidth/2,0,0])
+    difference(){
+      //support arms
+      union(){
+        translate([0,jointOffset,0])
+        cube([mountWidth,-jointOffset,armHeight]);
+
+        translate([0,jointOffset,nutRad])
+        rotate([0,90,0])
+        intersection(){
+          cylinder(r=nutRad+wall/2,h=mountWidth,$fn=32);
+          translate([-nutRad-wall/2,-nutRad-wall/2,0])
+          cube([armHeight,armHeight,mountWidth]);
+        }
+
+        if(support==1){
+          translate([0,jointOffset,0])
+          difference(){
+            cube([mountWidth,-jointOffset,mountWidth]);
+            translate([-.1,0,mountWidth])
+            rotate([0,90,0])
+	  cylinder(r=(mountWidth-armHeight),h=mountWidth+1);
+          }
+        }
+      }
+
+      //cutout center
+      translate([mountWidth/2,-mountWidth/2,-.1])
+      cylinder(r=(jointOuter+jointSlop)/2,h=mountWidth+1);
+      translate([mountWidth/2-(jointOuter+jointSlop)/2,-mountWidth/2-mountWidth,-.1])
+      cube([jointOuter+jointSlop,mountWidth,100]);
+
+      //nut & bolt holes
+      translate([mountWidth/2,jointOffset,nutRad])
+      rotate([0,90,0]){
+        rotate([0,0,30])
+        cylinder(r=nutRad, h=mountWidth-wall*2, $fn=6,center=true);
+        cylinder(r=boltRad, h=mountWidth+wall, center=true, $fn=16);
+      }
     }
-    translate([0, 4, 0]) cylinder(r=middle, h=100, center=true);
-    translate([0, -6, 0]) cube([2*middle, 20, 100], center=true);
   }
 }
 
-//this'll be updated later, or rather, we'll see how it works with synchromesh
+//this'll be updated soon.
+//I'm thinking two screw clamps, one top and one bottom; m4 for consistency.
 module belt_mount() {
   difference() {
     union() {
       difference() {
-        translate([8, 2, 0]) cube([4, 13, height], center=true);
+        translate([8, 6, 0]) cube([4, 13, height], center=true);
         for (z = [-3.5, 3.5])
           translate([8, 5, z])
             cube([5, 13, 3], center=true);
@@ -61,45 +85,57 @@ module belt_mount() {
   }
 }
 
-module carriage(){
+module carriage(support=0){
 	difference(){
 		union(){
 			for(i=[0:1]){
 				mirror([i,0,0])
-				translate([rodSeparation/2,offset,0])
+				translate([rodSeparation/2,lmMountSize/2,0])
 				rotate([0,0,180])
 				lmxuu_mount();
 			}
 
-			translate([0,20+wall/2,height/2])
+			translate([0,wall,height/2])
 			belt_mount();
 
-			translate([0,18-wall/2,lm_height/2+wall])
-			cube([rodSeparation-lm_dia+0.1,wall,lm_height+wall*2],center=true);
+			translate([0,wall/2,mountWidth/2])
+			cube([rodSeparation-lm_dia+0.1,wall,mountWidth],center=true);
 			difference(){
-				parallel_joints(16,rodSeparation+lm_dia+wall+wall);
+				parallel_joints(support);
 
 				for(i=[0:1]){
 					mirror([i,0,0])
-					translate([rodSeparation/2,offset,0])
+					translate([rodSeparation/2,lmMountSize/2,0])
 					cylinder(r=lm_dia/2+.1, h=lm_height+wall*2);
 				}
+			}
+			
+			//stiffening bars
+			for(i=[0:1]){
+				translate([0,0,sqrt(2)*wall/2+i*(mountWidth-sqrt(2)*wall)])
+				rotate([45,0,0])
+				cube([rodSeparation-mountWidth+.1,wall,wall],center=true);
 			}
 		}
 
 		for(i=[0:1]){
 			mirror([i,0,0]){
-				translate([(rodSeparation-lm_dia-3)/2-wall,16,lm_height/2+wall])
-				rotate([90,0,0])
-				cylinder(r=2.5, h=height, center=true, $fn=16);
-	
-				translate([(rodSeparation+lm_dia+3)/2+wall,16,lm_height/2+wall])
-				rotate([90,0,0])
-				cylinder(r=2.5, h=height, center=true, $fn=16);
+				translate([rodSeparation/2,lmMountSize/2,lm_height/2+wall])
+				rotate_extrude(convexity = 10,$fn=32){
+					translate([lmMountSize/2+2,0,0])
+					square([3,4],center=true);
+				}
 			}
 		}
+
+		//hole in the middle
+		translate([0,0,mountWidth/2])
+		rotate([90,0,0])
+		cylinder(r=mountWidth/4,h=mountWidth,center=true);
 	}
 }
 
-carriage();
+carriage(support=1);
 
+%translate([-jointSeparation/2,jointOffset,0])
+joint();
