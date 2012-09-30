@@ -16,9 +16,9 @@ middle = 2*offset - width/2;
 ////////
 mountWidth = jointOuter+jointSlop+nutRad+wall;
 lmMountSize = lm_dia+4;
-jointOffset = -mountWidth/2-5;
+jointOffset = mountWidth/2+5;
 
-armHeight = nutRad*2+wall/2;
+armHeight = nutRad*2+wall/3;
 
 //reworked.
 module parallel_joints(support=0) {
@@ -28,21 +28,21 @@ module parallel_joints(support=0) {
     difference(){
       //support arms
       union(){
-        translate([0,jointOffset,0])
-        cube([mountWidth,-jointOffset,armHeight]);
+        translate([0,-jointOffset,0])
+        cube([mountWidth,jointOffset,armHeight]);
 
-        translate([0,jointOffset,nutRad])
+        translate([0,-jointOffset,nutRad])
         rotate([0,90,0])
         intersection(){
-          cylinder(r=nutRad+wall/2,h=mountWidth,$fn=32);
-          translate([-nutRad-wall/2,-nutRad-wall/2,0])
+          cylinder(r=nutRad+wall/3,h=mountWidth,$fn=32);
+          translate([-nutRad-wall/3,-nutRad-wall/2,0])
           cube([armHeight,armHeight,mountWidth]);
         }
 
         if(support==1){
-          translate([0,jointOffset,0])
+          translate([0,-jointOffset,0])
           difference(){
-            cube([mountWidth,-jointOffset,mountWidth]);
+            cube([mountWidth,jointOffset,mountWidth]);
             translate([-.1,0,mountWidth])
             rotate([0,90,0])
 	  cylinder(r=(mountWidth-armHeight),h=mountWidth+1);
@@ -51,23 +51,23 @@ module parallel_joints(support=0) {
       }
 
       //cutout center
-      translate([mountWidth/2,-mountWidth/2,-.1])
+      translate([mountWidth/2,-(jointOuter+jointSlop)/2,-.1])
       cylinder(r=(jointOuter+jointSlop)/2,h=mountWidth+1);
-      translate([mountWidth/2-(jointOuter+jointSlop)/2,-mountWidth/2-mountWidth,-.1])
+      translate([mountWidth/2-(jointOuter+jointSlop)/2,-(jointOuter+jointSlop)/2-mountWidth,-.1])
       cube([jointOuter+jointSlop,mountWidth,100]);
 
       //nut & bolt holes
-      translate([mountWidth/2,jointOffset,nutRad])
+      translate([mountWidth/2,-jointOffset,nutRad])
       rotate([0,90,0]){
         rotate([0,0,30])
-        cylinder(r=nutRad, h=mountWidth-wall*2, $fn=6,center=true);
+        cylinder(r=nutRad, h=(jointOuter+jointSlop)+nutHeight*2, $fn=6,center=true);
         cylinder(r=boltRad, h=mountWidth+wall, center=true, $fn=16);
       }
     }
   }
 }
 
-//this'll be updated soon.
+//this'll be updated.
 //I'm thinking two screw clamps, one top and one bottom; m4 for consistency.
 module belt_mount() {
   difference() {
@@ -120,7 +120,7 @@ module carriage(support=0){
 
 		for(i=[0:1]){
 			mirror([i,0,0]){
-				translate([rodSeparation/2,lmMountSize/2,lm_height/2+wall])
+				translate([rodSeparation/2,lmMountSize/2,lm_height/2+wall/2])
 				rotate_extrude(convexity = 10,$fn=32){
 					translate([lmMountSize/2+2,0,0])
 					square([3,4],center=true);
@@ -137,5 +137,5 @@ module carriage(support=0){
 
 carriage(support=1);
 
-%translate([-jointSeparation/2,jointOffset,0])
+%translate([-jointSeparation/2,-jointOffset,0])
 joint();

@@ -2,19 +2,22 @@ include <configuration.scad>
 use <carriage.scad>
 
 h=platform_thickness;
-armHeight = nutRad*2+wall/2;
+armHeight = nutRad*2+wall/3;
 
 cutout = 12.5;
 
 module platform() {
   difference() {
     union() {
-      for (a = [0,120,240]) {
-        rotate([0, 0, a]) {
-          translate([0, -platform_hinge_offset, 0]) parallel_joints();
-          // Close little triangle holes.
-          translate([0, 30.5, 0]) cylinder(r=10, h=armHeight);
+      difference(){
+        for (a = [0,120,240]) {
+          rotate([0, 0, a]) {
+            translate([0, -platform_hinge_offset, 0]) parallel_joints();
+            // Close little triangle holes.
+            translate([0, 28, 0]) rotate([0,0,-30]) cylinder(r=15, h=armHeight,$fn=3);     
+          }
         }
+        translate([0,0,h-.5]) cylinder(r1=22,r2=30.5+10,h=armHeight-h+.6,$fn=64);
       }
       cylinder(r=30, h=h);
     }
@@ -26,9 +29,6 @@ module platform() {
           cylinder(r=2.2, h=h+1, $fn=12);
       }
     }
-    //slope the mounts
-    translate([0,0,h-.5])
-    cylinder(r1=20,r2=30.5+10,h=armHeight-h+.6,$fn=64);
   }
 }
 

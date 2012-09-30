@@ -9,7 +9,7 @@ wingLength = rodSeparation;	//how long the wing supports are for the motor
 rodSlop  = 1.0;	//how much bigger to make smooth rod holes
 boltSlop = 0.5;	//how much bigger to make bolt holes
 nutSlop  = 0.6;	//how much bigger to make nut holes
-jointSlop = .5;	//how much space around the joint
+jointSlop = 1.0;	//how much space around the joint
 			//the joint itself isn't slopped, the parts that join to it are.
 
 
@@ -20,15 +20,15 @@ lm_height = 30;
 
 //joint specs
 tubeDia = 6;
-jointHeight=boltSize*2;
-jointInner=jointHeight / cos(30);  //small side of joint - clamped by the jaw
-jointOuter=jointInner+boltSize+boltSlop;  //large side of joint, clamped by carriage & platform
+jointHeight=boltSize*2+2;
+jointInner=boltSize*2 / cos(30)+boltSize+boltSlop;  //small side of joint - clamped by the jaw
+jointOuter=boltSize*2 / cos(30)+boltSize+boltSlop;  //large side of joint, clamped by carriage & platform
 jointSeparation=rodSeparation; //separation between rod centers - used to align carriage & platform
 
 
 //platform specs
 platform_thickness = wall*1.15;
-platform_hinge_offset = 20;
+platform_hinge_offset = 21;
 
 //motor/idler specs
 idlerShaft = 4.5;
@@ -49,6 +49,7 @@ nutDia = 8.1+nutSlop;
 nutRad = nutDia/2;
 boltDia = 4+boltSlop;
 boltRad = boltDia/2;
+nutHeight = 3.3;
 
 m3NutDia = 6.1+nutSlop;
 m3NutRad = m3NutDia/2;

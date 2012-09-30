@@ -24,8 +24,8 @@ module joint() {
   translate([0, 0, jointHeight/2])
   difference() {
     union() {
-      stumpy(jointInner/2, jointOuter);
-      rotate([0, 0, 90]) stumpy(jointInner/2, jointInner);
+      stumpy(jointHeight/2, jointOuter);
+      rotate([0, 0, 90]) stumpy(jointHeight/2, jointInner);
     }
     rotate([90, 0, 0]) cylinder(r=boltRad, h=30, center=true, $fn=12);
     rotate([0, 90, 0]) cylinder(r=boltRad, h=30, center=true, $fn=12);
