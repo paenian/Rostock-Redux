@@ -14,9 +14,6 @@ cutout = 13;
 middle = 2*offset - width/2;
 
 ////////
-mountWidth = jointOuter+jointSlop+nutRad+wall;
-lmMountSize = lm_dia+4;
-jointOffset = mountWidth/2+5;
 
 armHeight = nutRad*2+wall/3;
 
@@ -70,17 +67,13 @@ module parallel_joints(support=0) {
 //this'll be updated.
 //I'm thinking two screw clamps, one top and one bottom; m4 for consistency.
 module belt_mount() {
-  difference() {
-    union() {
-      difference() {
-        translate([8, 6, 0]) cube([4, 13, height], center=true);
-        for (z = [-3.5, 3.5])
-          translate([8, 5, z])
-            cube([5, 13, 3], center=true);
-      }
-      for (y = [1.5, 5, 8.5]) {
-        translate([8, y, 0]) cube([4, 1.2, height], center=true);
-      }
+  echo(mountWidth);
+  translate([mountWidth/2-wall,wall-.01,0])
+  union(){
+    for(i=[0:beltPitch:mountWidth-beltPitch]){
+      translate([0,0,i])
+      rotate([45,0,0])
+      cube([wall*2, beltPitch,beltPitch]);
     }
   }
 }
@@ -95,7 +88,6 @@ module carriage(support=0){
 				lmxuu_mount();
 			}
 
-			translate([0,wall,height/2])
 			belt_mount();
 
 			translate([0,wall/2,mountWidth/2])
@@ -114,10 +106,24 @@ module carriage(support=0){
 			for(i=[0:1]){
 				translate([0,0,sqrt(2)*wall/2+i*(mountWidth-sqrt(2)*wall)])
 				rotate([45,0,0])
-				cube([rodSeparation-mountWidth+.1,wall,wall],center=true);
+				#cube([rodSeparation-mountWidth,wall,wall],center=true);
 			}
 		}
 
+		//belt zip ties
+		translate([0,-2,beltPitch*sqrt(2)*2+sqrt(2)])
+		for(i=[0:1]){
+			mirror([0,0,i]){
+				translate([mountWidth/2,wall+.5,beltPitch])
+				scale([1,1.5,1])
+				rotate_extrude(convexity = 10,$fn=32){
+					translate([beltPitch,0,0])
+					square([2,3],center=true);
+				}
+			}
+		}
+
+		//lm10uu zip ties
 		for(i=[0:1]){
 			mirror([i,0,0]){
 				translate([rodSeparation/2,lmMountSize/2,lm_height/2+wall/2])
