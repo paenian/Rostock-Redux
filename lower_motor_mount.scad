@@ -5,12 +5,34 @@ use <global_functions.scad>
 
 //local variables
 mrodDia = rodSize+rodSlop;
+mrodRad = mrodDia/2;
 mheight = 50;
 mSlotCenter = (motorMin+motorMax)/2;
 mSlotWidth = 3 +boltSlop;
 mSlotLength = (motorMax - motorMin+mSlotWidth)*sqrt(2);
 mnutHeight = nutRad/2;
 mStiff = 3;
+smoothRodOffset = 224;
+
+module rodMountHoles(){
+	for(i=[0:1]){
+		translate([rodSeparation*i,0,0])
+		mirror([1*i,0,0]){
+			//rod holes
+			cylinder(r=mrodRad, h=mheight,$fn=32);
+		
+			//bolt holes center
+			translate([wall/2-1,-mrodDia/2-wall-wall-1,0])
+			cylinder(r=boltRad, h=mheight, $fn=32);
+
+			//bolt holes wing	
+			translate([wall/2-1,-mrodDia/2-wall-wall,0])
+			rotate([0,0,-120])
+			translate([wingLength,0,0])
+			cylinder(r=boltRad, h=mheight, $fn=32);
+		}
+	}
+}
 
 module rodMount(motor=true){
 	union(){
@@ -23,9 +45,7 @@ module rodMount(motor=true){
 	
 				//platform mounts inner
 				translate([wall/2-1,-mrodDia/2-wall-wall-1,0])
-				//rotate([0,0,60])
-				//translate([-2,0,0])
-				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, false);
+				#hex_nutmount(boltSize,boltSize-1,mnutHeight*3, false);
 
 				//platform mounts wing	
 				translate([wall/2-1,-mrodDia/2-wall-wall,0])
@@ -117,14 +137,25 @@ module rodMount(motor=true){
 	}
 }
 
-//place on hex mount
+//make the hex plate
 module hexPlate(motor=true){
-	translate([0,0,-.1])
-	%cylinder(r=200, h=0.2, center=true, $fn=6);
-	for(i=[0:2]){
-		rotate([0,0,120*i])
-		translate([-rodSeparation/2,178,0])
-		rodMount(motor);
+	difference(){
+		translate([0,0,wall/2])
+		cylinder(r=(smoothRodOffset+wall+mrodRad)/cos(30), h=wall, center=true, $fn=6);
+		echo("Hex flat-to-flat distance = ",(smoothRodOffset+wall+mrodRad)*2);
+		echo("Hex point-to-point distance = ",(smoothRodOffset+wall+mrodRad)/cos(30)*2);
+
+		for(i=[0:2]){
+			rotate([0,0,120*i]){
+				translate([-rodSeparation/2,smoothRodOffset,-1])
+				rodMountHoles();
+			
+				//cut out slot for drive cable
+				translate([0,smoothRodOffset+wall+mrodRad,-1])
+				scale([(rodSeparation-mrodDia)/2-wall,mrodDia+wall,1])
+				cylinder(r=1, h=mheight, $fn=64);
+			}
+		}
 	}
 }
 
@@ -139,9 +170,10 @@ module printPlate(motor=true){
 	}
 }
 
-rodMount(true);
+//rodMount(true);
 
 //printPlate(false);
-//hexPlate();
+hexPlate(true);
 
 //rodMount(true);
+//rodMountHoles();
