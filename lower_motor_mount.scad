@@ -12,7 +12,7 @@ mSlotWidth = 3 +boltSlop;
 mSlotLength = (motorMax - motorMin+mSlotWidth)*sqrt(2);
 mnutHeight = nutRad/2;
 mStiff = 3;
-smoothRodOffset = 224;
+smoothRodOffset = 225;
 
 module rodMountHoles(){
 	for(i=[0:1]){
@@ -144,6 +144,7 @@ module hexPlate(motor=true){
 		cylinder(r=(smoothRodOffset+wall+mrodRad)/cos(30), h=wall, center=true, $fn=6);
 		echo("Hex flat-to-flat distance = ",(smoothRodOffset+wall+mrodRad)*2);
 		echo("Hex point-to-point distance = ",(smoothRodOffset+wall+mrodRad)/cos(30)*2);
+		cylinder(r=2.5,h=mheight,center=true,$fn=32);
 
 		for(i=[0:2]){
 			rotate([0,0,120*i]){
@@ -173,7 +174,10 @@ module printPlate(motor=true){
 //rodMount(true);
 
 //printPlate(false);
+rotate([0,0,60])
 hexPlate(true);
+translate([0,(smoothRodOffset+wall+mrodRad)*2+.25*25.4,0])
+hexPlate(false);
 
 //rodMount(true);
 //rodMountHoles();
