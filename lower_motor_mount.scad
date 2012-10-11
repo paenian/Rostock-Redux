@@ -45,7 +45,7 @@ module rodMount(motor=true){
 	
 				//platform mounts inner
 				translate([wall/2-1,-mrodDia/2-wall-wall-1,0])
-				#hex_nutmount(boltSize,boltSize-1,mnutHeight*3, false);
+				hex_nutmount(boltSize,boltSize-1,mnutHeight*3, false);
 
 				//platform mounts wing	
 				translate([wall/2-1,-mrodDia/2-wall-wall,0])
@@ -139,6 +139,7 @@ module rodMount(motor=true){
 
 //make the hex plate
 module hexPlate(motor=true){
+projection(){
 	difference(){
 		translate([0,0,wall/2])
 		cylinder(r=(smoothRodOffset+wall+mrodRad)/cos(30), h=wall, center=true, $fn=6);
@@ -148,16 +149,35 @@ module hexPlate(motor=true){
 
 		for(i=[0:2]){
 			rotate([0,0,120*i]){
+				//mounting holes
 				translate([-rodSeparation/2,smoothRodOffset,-1])
 				rodMountHoles();
 			
-				//cut out slot for drive cable
-				translate([0,smoothRodOffset+wall+mrodRad,-1])
-				scale([(rodSeparation-mrodDia)/2-wall,mrodDia+wall,1])
-				cylinder(r=1, h=mheight, $fn=64);
+				//drive cable slot
+				for(j=[0:1]){
+					mirror([j*1,0,0])
+					translate([rodSeparation/2-wall-mrodDia-mrodRad,smoothRodOffset+wall+mrodRad,-1])
+					scale([1,(2*wall+mrodDia)/mrodDia,1])
+					cylinder(r=mrodDia, h=mheight, $fn=64);
+				}
+				translate([0,smoothRodOffset,-1])
+				cube([2*wall+mrodDia,2*wall+mrodDia,2*wall+mrodDia],center=true);
+				
+				//handles
+				rotate([0,0,60]){
+					for(j=[0:1]){
+						mirror([j*1,0,0])
+						translate([rodSeparation/2,smoothRodOffset-(mrodDia+wall)*2,-1])
+						scale([1,(wall+mrodDia)/mrodDia,1])
+						cylinder(r=mrodDia, h=mheight, $fn=64);
+					}
+					translate([0,smoothRodOffset-(mrodDia+wall)*2,-1])
+					cube([rodSeparation,(mrodDia+wall)*2,2*wall+mrodDia],center=true);
+				}
 			}
 		}
 	}
+}
 }
 
 //place for printing
@@ -176,8 +196,8 @@ module printPlate(motor=true){
 //printPlate(false);
 rotate([0,0,60])
 hexPlate(true);
-translate([0,(smoothRodOffset+wall+mrodRad)*2+.25*25.4,0])
-hexPlate(false);
+//translate([0,(smoothRodOffset+wall+mrodRad)*2+.25*25.4,0])
+//hexPlate(false);
 
 //rodMount(true);
 //rodMountHoles();
