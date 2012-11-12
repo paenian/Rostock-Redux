@@ -6,6 +6,8 @@ armHeight = nutRad*2+wall/3;
 
 cutout = 12.5;
 
+$fn = 64;
+
 module platform() {
   difference() {
     union() {
@@ -26,7 +28,7 @@ module platform() {
     for (a = [0:2]) {
       rotate(a*120) {
         translate([0, -25, -.1])
-          cylinder(r=2.2, h=h+1, $fn=12);
+          cylinder(r=boltRad, h=h+1);
       }
     }
   }

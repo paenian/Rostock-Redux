@@ -7,6 +7,8 @@ h = r*2+wall/2;
 translate([0,0,-.1])
 %cube([200,200,0.2], center=true);
 
+
+
 //limits - it should fit in this box :-)
 %translate([-r,0,r+1])
 rotate([0,90,0])
@@ -16,6 +18,11 @@ forkWidth = jointInner+jointSlop;
 width = forkWidth+wall*2;
 forkLength = forkWidth*4;
 gap = h+wall;
+
+%cube([forkLength,20,10]);
+%cube([gap,30,10]);
+echo("rod offset = ",gap);
+
 
 e = 0.01;
 
@@ -51,6 +58,9 @@ module jaws() {
     //rod
     translate([forkLength/2+gap, 0, 0]) rotate([0, 90, 0])
       cylinder(r=r, h=forkLength, center=true, $fn=4);
+
+    translate([forkLength/2+gap, 20, 0]) rotate([0, 90, 0])
+      %cylinder(r=r, h=forkLength, center=true, $fn=4);
 
     //set screw/glue hole
     translate([forkLength-10,0,0]) rotate([0, 0, 0])
