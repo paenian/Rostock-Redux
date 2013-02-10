@@ -1,12 +1,14 @@
-width=42;
-height=10;
+width=60;
+height=12;
 length=15;
 
-fitting_rad=4.75;
+fitting_rad=5;
 
-screw_sep=31;
+screw_sep=50;
 
-fil_facets = 12;
+fil_facets = 18;
+
+center_offset = 3.5;
 
 
 difference(){
@@ -25,27 +27,27 @@ difference(){
 		mirror([0,0,j])
 		translate([0,0,width/4])
 		rotate([0,90,0]){
-			cylinder(r=2, h=height, $fn=12);
+			cylinder(r=2.25, h=height, $fn=12);
 			translate([0,0,-.1])
-			cylinder(r1=height/2, r2=2,h=height/2, $fn=12);
+			cylinder(r1=height/2, r2=2.25,h=height/2, $fn=12);
 		}
 	}
 
 	for(i=[0,1]) mirror([i,0,0]){
 		//motor mount screw holes
-		#translate([screw_sep/2,0,4]) rotate([90,0,0]) cylinder(r=1.6/cos(180/6), h=50,center=true, $fn=6);
-
-		translate([6,5.5,0]){
+		translate([screw_sep/2,length/2,4]) cylinder(r=2.2/cos(180/6), h=50,center=true, $fn=12);
+	}
+	
+	translate([-center_offset,length/2,0]){
 			//filament hole
-			cylinder(r=1.1/cos(180/fil_facets),h=50,center=true, $fn=fil_facets);
+			cylinder(r=1.8/cos(180/fil_facets),h=50,center=true, $fn=fil_facets);
 
 			//conic guide
 			translate([0,0,-.01])
-			cylinder(r1=4, r2=1.1/cos(180/fil_facets), h=4, $fn=fil_facets);
+			cylinder(r1=5, r2=1.8/cos(180/fil_facets), h=4, $fn=fil_facets);
 	
 			//bowden mount hole
 			translate([0,0,5])
-			cylinder(r=fitting_rad, h=height, $fn=22);
+			cylinder(r=fitting_rad/cos(180/fil_facets), h=height, $fn=fil_facets);
 		}
-	}
 }
