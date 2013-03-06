@@ -23,7 +23,7 @@ nutRad = nutDia/2;
 boltDia = 4+boltSlop;
 boltRad = boltDia/2;
 nutHeight = 3.3;
-washDia = 7+nutSlop;
+washDia = 9+nutSlop;
 washRad = washDia/2;
 
 m3NutDia = 6.1+nutSlop;
@@ -53,6 +53,7 @@ beltPitch = 3.81;
 //platform specs
 platform_thickness = 15;
 platform_hinge_offset = 21;
+bolt_ring_rad = 28;
 
 //motor/idler specs
 idlerShaft = 4.5;

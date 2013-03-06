@@ -1,28 +1,28 @@
 include <configuration.scad>
 use <carriage.scad>
 
-center_rad = 20;
-bolt_ring_rad = 26;
+center_rad = 22;
 
 //this is for a makergear groovemount
 hotend_outer_rad = 15.875/2;
-hotend_inner_rad = 6;
-hotend_rad = 12;
+hotend_inner_rad = 5.9;
+hotend_rad = 13;
 
 top_thickness = 6;
-groove_thickness = 4;
+groove_thickness = 4.5;
+groove_length = 6.75;
 
-wedge_factor = 1.1;	//decrease this to make the slot wider, and the hotend easier to insert
+wedge_factor = 1.25;	//decrease this to make the slot wider, and the hotend easier to insert
 groove_slot_width = hotend_inner_rad*2-wedge_factor;
 top_slot_width = hotend_outer_rad*2-wedge_factor/2;
 
 //this is for the threaded coupler
 coupler_inner_rad = 4.4;
-coupler_height=8;
+coupler_height=7.5;
 
 layer_height=.2;
 
-slot_lock=1.5;
+slot_lock=1.6;
 
 $fn=72;
 
@@ -57,18 +57,16 @@ module hotend_arm(){
       translate([0,hotend_rad,0])
       rotate([0,0,30]){
         //hotend mount
-        cylinder(r=hotend_rad-slop/2,h=groove_thickness+top_thickness+coupler_height, $fn=6);
-        *translate([0,0,groove_thickness-.01])
-        #cylinder(r=(hotend_rad-slop/2)-.5,h=top_thickness+coupler_height, $fn=6);
-
+        cylinder(r=hotend_rad-slop,h=groove_thickness+top_thickness+coupler_height, $fn=6);
+        
         //alignment peg
         translate([0,(-hotend_rad+slop)*cos(30)-groove_thickness/2+slop+slop,groove_thickness/2]){
-          cube([groove_slot_width-slop*2,groove_thickness-slop*2,groove_thickness],center=true);
+          cube([groove_slot_width-slop*2,groove_length-slop*2,groove_thickness],center=true);
           for(i=[0,1]){
             mirror([i,0,0])
             translate([(groove_slot_width-slop*2)/2,1,0])
             rotate([0,45,0])
-            cube([slot_lock-slop,groove_thickness-slop*2+2,slot_lock-slop],center=true);
+            cube([slot_lock-slop,groove_length-slop*2+2,slot_lock-slop],center=true);
           }
         }
       }
@@ -107,9 +105,9 @@ module hotend_arm(){
       for(i=[0,1]){
           rotate([0,0,90])
           mirror([i,0,0])
-          translate([(groove_slot_width-slop*2)/2,0,0])
+          translate([(groove_slot_width-slop*2)/2,1-groove_length/2,0])
           rotate([0,45,0])
-          cube([slot_lock,hotend_outer_rad,slot_lock],center=true);
+          cube([slot_lock,groove_length,slot_lock],center=true);
         }
     }
 
@@ -117,6 +115,10 @@ module hotend_arm(){
     rotate([0,0,60])
     translate([2,hotend_rad/2,groove_thickness+top_thickness/2])
     cube([top_slot_width,top_slot_width,top_thickness],center=true);
+
+    //center bolt
+    //cylinder(r=boltRad, h=20, center=true);
+    //translate([0,0,groove_thickness/2]) cylinder(r=nutRad, h=20, $fn=6);
   }
 }
 
@@ -127,6 +129,6 @@ module assembled(){
   }
 }
 
-//assembled();
+assembled();
 
-hotend_arm();
+//hotend_arm();
