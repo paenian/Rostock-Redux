@@ -129,6 +129,6 @@ module assembled(){
   }
 }
 
-assembled();
+//assembled();
 
-//hotend_arm();
+hotend_arm();
