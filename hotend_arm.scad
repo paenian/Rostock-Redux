@@ -5,7 +5,7 @@ center_rad = 22;
 
 //this is for a makergear groovemount
 hotend_outer_rad = 15.875/2;
-hotend_inner_rad = 5.9;
+hotend_inner_rad = 6;
 hotend_rad = 13;
 
 top_thickness = 6;
@@ -18,7 +18,7 @@ top_slot_width = hotend_outer_rad*2-wedge_factor/2;
 
 //this is for the threaded coupler
 coupler_inner_rad = 4.4;
-coupler_height=7.5;
+coupler_height=6;
 
 layer_height=.2;
 
