@@ -5,7 +5,7 @@ ard_y = 62;
 ard_z = 42;
 
 clip_x = 20;
-clip_z = 14.5+1;
+clip_z = 14.5+1+3;
 
 poff_x = 18;
 poff_y =6;
@@ -40,7 +40,7 @@ module arduinobox(){
 
 		//cutout for clips
 		for(i=[0:1]) translate([0,i*(ard_y+wall*2),0]) mirror([0,i,0]){
-		    translate([ard_x/2-wall/2-clip_x/2, -wall/2, wall*2]) cube([clip_x+wall, wall*2, clip_z+plat_z-wall]);
+		    translate([ard_x/2-wall/2-clip_x/2, -wall/2, wall*2]) cube([clip_x+wall, wall*2, clip_z+plat_z-wall-1]);
 	    	}
 
 		//some air holes
@@ -56,7 +56,7 @@ module arduinobox(){
 
 	    //clips
 	    for(i=[0:1]) translate([0,i*(ard_y+wall*2),0]) mirror([0,i,0]){
-	       translate([ard_x/2, wall-.1, clip_z+plat_z]) rotate([45,0,0]) cube([clip_x, wall, wall], center=true);
+	       #translate([ard_x/2, wall, clip_z+plat_z]) rotate([0,90,0]) cylinder(r=wall/2, h=clip_x, center=true, $fn=4); //cube([clip_x, wall, wall], center=true);
 	       translate([ard_x/2-clip_x/2, 0, 0]) cube([clip_x, wall, clip_z+plat_z]);
 	    }
 
