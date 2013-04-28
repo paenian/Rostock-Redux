@@ -2,7 +2,7 @@ include <configuration.scad>
 
 con_l = 65;
 con_w = 48;
-con_h = 28;
+con_h = 35;
 
 wall = 2.5;
 gap = 1;
@@ -16,7 +16,7 @@ out_w = in_w+wall*2;
 out_h = in_h+wall*2;
 
 //connectors
-wire_l = 7;
+wire_l = 10;
 wire_w = 20;
 wire_h = 12;
 wire_h_offset = 7.5;
@@ -82,10 +82,12 @@ module converterbox(){
 
 	//side vents
 	for(i=[13.5:15:out_w+5]){
-		translate([i, out_w/2, 11]) rotate([90,30,0]) cylinder(r=7, h=out_w*2, center=true, $fn=6);
+		translate([i, out_w/2, 11]) rotate([90,30,0]) cylinder(r=7.25, h=out_w*2, center=true, $fn=6);
 	}
-    }
-
+	for(i=[21:15:out_w]){
+		translate([i, out_w/2, 22.5]) rotate([90,30,0]) cylinder(r=6, h=out_w*2, center=true, $fn=6);
+	}
+  }
 }
 
 //rotate for printing
